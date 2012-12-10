@@ -26,8 +26,8 @@ end
 type Options{T<:OptionsChecking}
     key2index::Dict{Symbol,Int}
     vals::Vector
-    used::Vector{Bool}
-    check_lock::Vector{Bool}
+    used::AbstractVector{Bool}
+    check_lock::AbstractVector{Bool}
 end
 # Constructor: supply type followed by parameter/value pairs,
 #   o = Options(CheckWarn,:a,5,:b,rand(3),...)
@@ -131,7 +131,7 @@ end
 function ischeck(a)
     error("First argument must be an options type")
 end
-function docheck_common(o::Options,checkflag::Vector{Bool})
+function docheck_common(o::Options,checkflag::AbstractVector{Bool})
     unused = checkflag & !o.used[1:length(checkflag)]
     msg = ""
     if any(unused)
@@ -145,17 +145,17 @@ function docheck_common(o::Options,checkflag::Vector{Bool})
     end
     return unused, msg
 end
-function docheck(o::Options{CheckNone},checkflag::Vector{Bool})
+function docheck(o::Options{CheckNone},checkflag::AbstractVector{Bool})
     clearcheck(o,checkflag)
 end
-function docheck(o::Options{CheckWarn},checkflag::Vector{Bool})
+function docheck(o::Options{CheckWarn},checkflag::AbstractVector{Bool})
     unused, msg = docheck_common(o,checkflag)
     if any(unused)
         println("Warning: ",msg)
     end
     clearcheck(o,checkflag)
 end
-function docheck(o::Options{CheckError},checkflag::Vector{Bool})
+function docheck(o::Options{CheckError},checkflag::AbstractVector{Bool})
     unused, msg = docheck_common(o,checkflag)
     clearcheck(o,checkflag)  # in case it's in a try/catch block...
     if any(unused)
@@ -163,7 +163,7 @@ function docheck(o::Options{CheckError},checkflag::Vector{Bool})
     end
 end
 # Reset status on handled options (in case o is reused later)
-function clearcheck(o::Options,checkflag::Vector{Bool})
+function clearcheck(o::Options,checkflag::AbstractVector{Bool})
     for i = 1:length(checkflag)
         if checkflag[i]
             o.used[i] = false
