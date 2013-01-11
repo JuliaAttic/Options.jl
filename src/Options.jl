@@ -58,7 +58,7 @@ function Options{T<:OptionsChecking}(::Type{T},ex::Expr...)
             error("All expressions must be assignments")
         end
         ht[ex[i].args[1]] = i
-        push(vals,ex[i].args[2])
+        push!(vals,ex[i].args[2])
     end
     used = falses(n)
     check_lock = falses(n)
@@ -114,9 +114,9 @@ function assign(o::Options,v,s::Symbol)
         o.check_lock[index] = false
     else
         o.key2index[s] = length(o.vals)+1
-        push(o.vals,v)
-        push(o.used,false)
-        push(o.check_lock,false)
+        push!(o.vals,v)
+        push!(o.used,false)
+        push!(o.check_lock,false)
     end
 end
 # Functions for "claiming" and checking usage of individual options
@@ -138,7 +138,7 @@ function docheck_common(o::Options,checkflag::BitArray)
         s = Array(ASCIIString,0)
         for (k, v) = o.key2index
             if v <= length(unused) && unused[v]
-                push(s,string(k))
+                push!(s,string(k))
             end
         end
         msg = strcat("The following option(s) were unused: ",s)
@@ -192,10 +192,10 @@ macro defaults(opts,ex...)
         if isa(y, Expr) && y.head == :block
             # Found a begin..end block: expand its contents in-place
             # and restart from the same position
-            del(ex, i)
+            delete!(ex, i)
             i0 = i
             for z in y.args
-                insert(ex, i, z)
+                insert!(ex, i, z)
                 i += 1
             end
             i = i0
@@ -245,7 +245,7 @@ macro options(ex...)
     ex = {ex...}
     i = 1
     if length(ex) >= 1 && isa(ex[1], Symbol)
-        push(callargs, esc(ex[1]))
+        push!(callargs, esc(ex[1]))
         i += 1
     end
     while i <= length(ex)
@@ -253,10 +253,10 @@ macro options(ex...)
         if isa(y, Expr) && y.head == :block
             # Found a begin..end block: expand its contents in-place
             # and restart from the same position
-            del(ex, i)
+            delete!(ex, i)
             i0 = i
             for z in y.args
-                insert(ex, i, z)
+                insert!(ex, i, z)
                 i += 1
             end
             i = i0
@@ -268,8 +268,8 @@ macro options(ex...)
         elseif !isa(y,Expr) || !(y.head == :(=) || y.head == :(=>) || y.head == :(:=))
             error("Arguments to @options must be assignments, e.g., a=5 or a=>5")
         end
-        push(callargs, expr(:quote, y.args[1]))
-        push(callargs, esc(y.args[2]))
+        push!(callargs, expr(:quote, y.args[1]))
+        push!(callargs, esc(y.args[2]))
         i += 1
     end
     expr(:call, callargs)
@@ -290,10 +290,10 @@ macro set_options(opts,ex...)
         if isa(y, Expr) && y.head == :block
             # Found a begin..end block: expand its contents in-place
             # and restart from the same position
-            del(ex, i)
+            delete!(ex, i)
             i0 = i
             for z in y.args
-                insert(ex, i, z)
+                insert!(ex, i, z)
                 i += 1
             end
             i = i0
