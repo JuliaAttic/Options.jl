@@ -77,7 +77,7 @@ end
 function convert{Tnew<:OptionsChecking,Told<:OptionsChecking}(::Type{Tnew},o::Options{Told})
     Options{Tnew}(o.key2index,o.vals,o.used,o.check_lock)
 end
-function show{T<:OptionsChecking}(io, o::Options{T})
+function show{T<:OptionsChecking}(io::IO, o::Options{T})
     # Put them in the same order specified by the user
     key = Array(ASCIIString,length(o.vals))
     for (k, v) = o.key2index
