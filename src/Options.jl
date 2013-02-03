@@ -141,7 +141,7 @@ function docheck_common(o::Options,checkflag::BitArray)
                 push!(s,string(k))
             end
         end
-        msg = strcat("The following option(s) were unused: ",s)
+        msg = string("The following option(s) were unused: ",s)
     end
     return unused, msg
 end
@@ -180,7 +180,7 @@ end
 # After executing this macro, you can use a, b, and c as ordinary variables
 macro defaults(opts,ex...)
     # Create a new variable storing the checkflag
-    varname = strcat("_",string(opts),"_checkflag")
+    varname = string("_",string(opts),"_checkflag")
     exret = :($(esc(symbol(varname))) = ischeck($(esc(opts))))
     # Transform the tuple into a vector, so that
     # we can manipulate it
@@ -231,7 +231,7 @@ end
 # Usage:
 #    @check_used opts
 macro check_used(opts)
-    varname = strcat("_",string(opts),"_checkflag")
+    varname = string("_",string(opts),"_checkflag")
     :(docheck($(esc(opts)),$(esc(symbol(varname)))))
 end
 
