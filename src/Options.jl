@@ -200,7 +200,7 @@ macro defaults(opts,ex...)
             end
             i = i0
             continue
-        elseif isa(y, LineNumberNode)
+        elseif isa(y, LineNumberNode) || (isa(y,Expr) && y.head == :line)
             # A line number node, ignore
             i += 1
             continue
@@ -212,7 +212,7 @@ macro defaults(opts,ex...)
         sym = y.args[1]
         exret = quote
             $exret
-            htindex = Base.ht_keyindex($(esc(opts)).key2index,$(expr(:quote,sym)))
+            htindex = Base.ht_keyindex($(esc(opts)).key2index,$(Expr(:quote,sym)))
             if htindex > 0
                 htindex = $(esc(opts)).key2index.vals[htindex]
                 $(esc(sym)) = $(esc(opts)).vals[htindex]
@@ -261,18 +261,18 @@ macro options(ex...)
             end
             i = i0
             continue
-        elseif isa(y, LineNumberNode)
+        elseif isa(y, LineNumberNode) || (isa(y,Expr) && y.head == :line)
             # A line number node, ignore
             i += 1
             continue
         elseif !isa(y,Expr) || !(y.head == :(=) || y.head == :(=>) || y.head == :(:=))
             error("Arguments to @options must be assignments, e.g., a=5 or a=>5")
         end
-        push!(callargs, expr(:quote, y.args[1]))
+        push!(callargs, Expr(:quote, y.args[1]))
         push!(callargs, esc(y.args[2]))
         i += 1
     end
-    expr(:call, callargs)
+    Expr(:call, callargs...)
 end
 
 # Macro to reset or append additional options. Usage:
@@ -298,7 +298,7 @@ macro set_options(opts,ex...)
             end
             i = i0
             continue
-        elseif isa(y, LineNumberNode)
+        elseif isa(y, LineNumberNode) || (isa(y,Expr) && y.head == :line)
             # A line number node, ignore
             i += 1
             continue
@@ -311,7 +311,7 @@ macro set_options(opts,ex...)
         val = y.args[2]
         exret = quote
             $exret
-            $(esc(opts))[$(expr(:quote,sym))] = $(esc(val))
+            $(esc(opts))[$(Expr(:quote,sym))] = $(esc(val))
         end
         i += 1
     end
