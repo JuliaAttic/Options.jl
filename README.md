@@ -112,4 +112,4 @@ The fields of the `Options` type are
 
 ## Credits
 
-The primary authors are Harlan Harris and Tim Holy, with contributions from Stefan Karpinski, Patrick O'Leary, and Jeff Bezanson.
+The primary authors are Harlan Harris, Tim Holy, and Carlo Baldassi, with contributions from Stefan Karpinski, Patrick O'Leary, John Myles White, and Jeff Bezanson.
