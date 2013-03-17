@@ -14,6 +14,13 @@ Install via the Julia package manager, `Pkg.add("Options")`.
 
 # Basic usage
 
+You gain access to `Options` via
+
+```
+require("Options")
+using OptionsMod
+```
+
 The `@defaults` macro is for writing functions that take optional parameters. 
 The typical syntax of such functions is:
 
