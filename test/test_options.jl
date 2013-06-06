@@ -1,9 +1,8 @@
-test_context("Options for functions")
-
-require("options")
+require("Options")
 using OptionsMod
+using Test
 
-test_group("basic functionality")
+# basic functionality
 oo = Options(:a, true, :b, 7)
 @test length(oo.key2index) == 2
 @test oo[:a] == true
@@ -11,20 +10,19 @@ oo = Options(:a, true, :b, 7)
 @test oo[:c] == nothing
 @test sprint(show, oo) == "a = true, b = 7 (CheckError)"
 
-test_group("other constructors")
+# other constructors
 oo2 = Options(CheckWarn, :(a=true), :(b=7))
 @test oo2[:a] == true
 oo3 = @options a=true b=7
 @test oo3[:b] == 7
 
-
-test_group("changing options")
+# changing options
 oo2[:b] = 6
 oo2[:c] = "cat"
 @test oo2[:b] < 7
 @test oo2[:c] == "cat"
 
-test_group("simple example")
+# simple example
 function f1(a, b, o::Options)
 	@defaults o op="plus"
     if op == "plus"
@@ -39,7 +37,7 @@ f1(a, b) = f1(a, b, Options())
 @test f1(3, 2, Options(:op, "plus")) == 5
 @test f1(3, 2, Options(:op, "other")) == 1
 
-test_group("complex example")
+# complex example
 function complexfun(x, opts::Options)
     @defaults opts parent=3 both=7
     sub1, both1 = subfun1(x, opts)
@@ -67,4 +65,4 @@ opts = @options sub2=15
 @set_options opts both=8
 @test complexfun(5, opts) == (3,8,"sub1 default", 8, 15, 8)
 @set_options opts sub1a=5
-@testfails complexfun(5, opts)
+@test_fails complexfun(5, opts)
