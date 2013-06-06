@@ -192,13 +192,7 @@ macro defaults(opts,ex...)
         if isa(y, Expr) && y.head == :block
             # Found a begin..end block: expand its contents in-place
             # and restart from the same position
-            delete!(ex, i)
-            i0 = i
-            for z in y.args
-                insert!(ex, i, z)
-                i += 1
-            end
-            i = i0
+            splice!(ex, i, y.args)
             continue
         elseif isa(y, LineNumberNode) || (isa(y,Expr) && y.head == :line)
             # A line number node, ignore
@@ -253,13 +247,7 @@ macro options(ex...)
         if isa(y, Expr) && y.head == :block
             # Found a begin..end block: expand its contents in-place
             # and restart from the same position
-            delete!(ex, i)
-            i0 = i
-            for z in y.args
-                insert!(ex, i, z)
-                i += 1
-            end
-            i = i0
+            splice!(ex, i, y.args)
             continue
         elseif isa(y, LineNumberNode) || (isa(y,Expr) && y.head == :line)
             # A line number node, ignore
@@ -290,13 +278,7 @@ macro set_options(opts,ex...)
         if isa(y, Expr) && y.head == :block
             # Found a begin..end block: expand its contents in-place
             # and restart from the same position
-            delete!(ex, i)
-            i0 = i
-            for z in y.args
-                insert!(ex, i, z)
-                i += 1
-            end
-            i = i0
+            splice!(ex, i, y.args)
             continue
         elseif isa(y, LineNumberNode) || (isa(y,Expr) && y.head == :line)
             # A line number node, ignore
