@@ -198,7 +198,7 @@ macro defaults(opts,ex...)
             # A line number node, ignore
             i += 1
             continue
-        elseif !isa(y,Expr) || !(y.head == :(=) || y.head == :(=>) || y.head == :(:=))
+        elseif !isa(y,Expr) || !(y.head == :(=) || y.head == :(=>) || y.head == :(:=) || y.head == :kw)
             error("Arguments to @defaults following the options variable must be assignments, e.g., a=5 or a=>5")
         end
         y.head = :(=)
@@ -253,7 +253,7 @@ macro options(ex...)
             # A line number node, ignore
             i += 1
             continue
-        elseif !isa(y,Expr) || !(y.head == :(=) || y.head == :(=>) || y.head == :(:=))
+        elseif !isa(y,Expr) || !(y.head == :(=) || y.head == :(=>) || y.head == :(:=) || y.head == :kw)
             error("Arguments to @options must be assignments, e.g., a=5 or a=>5")
         end
         push!(callargs, Expr(:quote, y.args[1]))
@@ -284,7 +284,7 @@ macro set_options(opts,ex...)
             # A line number node, ignore
             i += 1
             continue
-        elseif !isa(y,Expr) || !(y.head == :(=) || y.head == :(=>) || y.head == :(:=))
+        elseif !isa(y,Expr) || !(y.head == :(=) || y.head == :(=>) || y.head == :(:=) || y.head == :kw)
             error("Arguments to @set_options following the options variable must be assignments, e.g., a=5 or a=>5")
         end
         y.head = :(=)
