@@ -7,11 +7,11 @@ module OptionsMod
 using Base
 # can't get Base.ht_keyindex from dict.jl -- will pull it manually
 
-import Base.convert, Base.copy, Base.show, Base.ref, Base.assign
+import Base: convert, copy, show, getindex, setindex!
 
 export Options,
 	CheckNone, CheckWarn, CheckError,
-	add_defaults!, show, ref, assign,
+	add_defaults!,
 	ischeck, docheck, clearcheck,
 	@options, @defaults, @check_used, @set_options
 
@@ -95,7 +95,7 @@ end
 
 #### Functions ####
 # Return an options setting
-function ref(o::Options,s::Symbol)
+function getindex(o::Options,s::Symbol)
     index = Base.ht_keyindex(o.key2index,s)
     if index > 0
         index = o.key2index.vals[index]
@@ -105,7 +105,7 @@ function ref(o::Options,s::Symbol)
     end
 end
 # Re-set an options setting, or add a new one
-function assign(o::Options,v,s::Symbol)
+function setindex!(o::Options,v,s::Symbol)
     index = Base.ht_keyindex(o.key2index,s)
     if index > 0
         index = o.key2index.vals[index]
