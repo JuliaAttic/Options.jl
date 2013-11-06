@@ -65,4 +65,4 @@ opts = @options sub2=15
 @set_options opts both=8
 @test complexfun(5, opts) == (3,8,"sub1 default", 8, 15, 8)
 @set_options opts sub1a=5
-@test_fails complexfun(5, opts)
+@test_throws complexfun(5, opts)
