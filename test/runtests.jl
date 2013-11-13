@@ -1,6 +1,6 @@
 require("Options")
 using OptionsMod
-using Test
+using Base.Test
 
 # basic functionality
 oo = Options(:a, true, :b, 7)
