@@ -1,8 +1,8 @@
 # Overview
 
 The Options package provides macros that allow the simulation of optional
-keyword arguments for Julia functions. Some of this functionality will
-be superseded by language support for keyword arguments ([see
+keyword arguments for Julia functions. Some of this functionality was
+superseded by language support for keyword arguments ([see
 \#485](https://github.com/JuliaLang/julia/issues/485)). However, the Options
 package will likely remain relevant for cases where you need to pass optional
 arguments to nested functions without the parent functions needing to be aware
@@ -21,7 +21,7 @@ require("Options")
 using OptionsMod
 ```
 
-The `@defaults` macro is for writing functions that take optional parameters. 
+The `@defaults` macro is for writing functions that take optional parameters.
 The typical syntax of such functions is:
 
       function myfunc(requiredarg1, requiredarg2, ..., opts::Options)
@@ -49,7 +49,7 @@ example:
           @check_used plotopts
           @check_used calcopts
       end
- 
+
 Within a given scope, you should have only one call to `@defaults` per options
 variable.
 
@@ -72,7 +72,7 @@ that the relevant options may change over time, but users may not notice the
 change and continue providing parameters that are no longer used by the
 function. A similar scenario arises when users simply misspell an optional
 parameter. In such cases the user may be quite confused about why changing the
-value of those parameters has no impact on the output of the function. 
+value of those parameters has no impact on the output of the function.
 
 For this reason, the default expected behavior is for functions to check that
 all optional parameters have been used by the function. This is achieved with
@@ -102,8 +102,8 @@ for example:
           println(sub2)
           println(both)
           @check_used opts
-      end     
-     
+      end
+
 Typically, unused parameters will result in an error. The user can control the
 behavior this way:
 
