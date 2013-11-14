@@ -1,0 +1,17 @@
+language: cpp
+compiler: 
+    - clang
+notifications:
+    email: false
+before_install:
+    - sudo add-apt-repository ppa:staticfloat/julia-deps -y
+    - sudo add-apt-repository ppa:staticfloat/julianightlies -y
+    - sudo apt-get update -qq -y
+    - sudo apt-get install julia -y
+script:
+    - julia -e 'Pkg.init(); run(`ln -s $(pwd()) $(Pkg.dir())/`); Pkg.resolve()'
+    - julia -e 'require("Options.jl"); using OptionsMod; @assert isdefined(:OptionsMod); @assert typeof(OptionsMod) === Module'
+    - julia -P 'push!(LOAD_PATH, "..")' test/runtests.jl
+branches:
+    except:
+        - release-0.1
