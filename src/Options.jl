@@ -38,11 +38,15 @@ function Options{T<:OptionsChecking}(::Type{T},args...)
     end
     n = div(length(args),2)
     keys, index, vals = if n > 0
-        (args[1:2:end], ntuple(n, identity), Any[args[2:2:end]...])
+        (args[1:2:end], ntuple(identity, n), Any[args[2:2:end]...])
     else
         ((), (), Array(Any, 0))
     end
-    ht = Dict{Symbol,Int}(keys,index)
+    if VERSION < v"0.3-"
+        ht = Dict{Symbol,Int}(keys,index)
+    else
+        ht = Dict{Symbol,Int}(zip(keys,index))
+    end
     used = falses(n)
     check_lock = falses(n)
     Options{T}(ht,vals,used,check_lock)
@@ -50,7 +54,7 @@ end
 # Constructor: supply type followed by list of assignment expressions, e.g.,
 #   o = Options(CheckNone,:(a=5),:(b=rand(3)),...)
 function Options{T<:OptionsChecking}(::Type{T},ex::Expr...)
-    ht = (Symbol=>Int)[]
+    ht = Dict{Symbol,Int}()
     vals = Array(Any,0)
     n = length(ex)
     for i = 1:n
@@ -184,7 +188,7 @@ macro defaults(opts,ex...)
     exret = :($(esc(symbol(varname))) = ischeck($(esc(opts))))
     # Transform the tuple into a vector, so that
     # we can manipulate it
-    ex = {ex...}
+    ex = Any[ex...]
     # Check each argument in the assignment list
     i = 1
     while i <= length(ex)
@@ -236,7 +240,7 @@ macro options(ex...)
     callargs = Any[:Options]
     # Transform the tuple into a vector, so that
     # we can manipulate it
-    ex = {ex...}
+    ex = Any[ex...]
     i = 1
     if length(ex) >= 1 && isa(ex[1], Symbol)
         push!(callargs, esc(ex[1]))
@@ -270,7 +274,7 @@ macro set_options(opts,ex...)
     end
     # Transform the tuple into a vector, so that
     # we can manipulate it
-    ex = {ex...}
+    ex = Any[ex...]
     # Check each argument in the assignment list
     i = 1
     while i <= length(ex)
