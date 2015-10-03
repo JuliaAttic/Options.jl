@@ -1,4 +1,4 @@
-require("Options")
+isdefined(:OptionsMod) || @eval import Options
 using OptionsMod
 using Base.Test
 
@@ -8,7 +8,7 @@ oo = Options(:a, true, :b, 7)
 @test oo[:a] == true
 @test oo[:b] > 6
 @test oo[:c] == nothing
-@test sprint(show, oo) == "a = true, b = 7 (CheckError)"
+@test sprint(show, oo) == "a = true, b = 7 ($CheckError)"
 
 # other constructors
 oo2 = Options(CheckWarn, :(a=true), :(b=7))
@@ -65,4 +65,14 @@ opts = @options sub2=15
 @set_options opts both=8
 @test complexfun(5, opts) == (3,8,"sub1 default", 8, 15, 8)
 @set_options opts sub1a=5
-@test_throws complexfun(5, opts)
+
+# backwards-compatible test_throws (works in julia 0.2)
+macro test_throws_02(args...)
+    if VERSION >= v"0.3-"
+        :(@test_throws($(esc(args[1])), $(esc(args[2]))))
+    else
+        :(@test_throws($(esc(args[2]))))
+    end
+end
+
+@test_throws_02 ErrorException complexfun(5, opts)
