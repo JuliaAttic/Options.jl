@@ -66,13 +66,4 @@ opts = @options sub2=15
 @test complexfun(5, opts) == (3,8,"sub1 default", 8, 15, 8)
 @set_options opts sub1a=5
 
-# backwards-compatible test_throws (works in julia 0.2)
-macro test_throws_02(args...)
-    if VERSION >= v"0.3-"
-        :(@test_throws($(esc(args[1])), $(esc(args[2]))))
-    else
-        :(@test_throws($(esc(args[2]))))
-    end
-end
-
-@test_throws_02 ErrorException complexfun(5, opts)
+@test_throws ErrorException complexfun(5, opts)
